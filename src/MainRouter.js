@@ -6,6 +6,10 @@ import MainPage from "./pages/MainPage";
 import ShopPage from "./pages/ShopPage";
 import {createBrowserHistory} from 'history'
 import ExampleSwiper from "./pages/ExampleSwiper";
+import StyledMainPage from "./styled/StyledMainPage";
+import StyledBtn from "./styled/StyledBtn";
+import {Styled} from "styled-components";
+import StyledShopPage from "./styled/StyledShopPage";
 
 function MainRouter () {
     let history = createBrowserHistory();
@@ -18,10 +22,12 @@ function MainRouter () {
                     <ExampleSwiper/>
                 </Route>
                 <Route path="/shop">
-                    <ShopPage/>
+                    <StyledShopPage/>
                 </Route>
                 <Route path="/">
-                    <MainPage/>
+                    {/*<StyledBtn>The Button</StyledBtn>*/}
+                    <StyledMainPage/>
+                    {/*<MainPage/>*/}
                 </Route>
                 <Route path="/main">
                     <MainPage/>

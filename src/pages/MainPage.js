@@ -2,9 +2,11 @@ import {Link} from "react-router-dom";
 import Slogan from "../utils/Slogan";
 
 
-function MainPage () {
+function MainPage (props) {
+    const className = props.className;
+
     return (
-        <div className="App">
+        <div className={"App " + className}>
             <div className="header-shadow">
             <header className="slogan frame">
                 <div className="logo-wrapper">
