@@ -1,93 +1,54 @@
 import React, {useRef, useState} from 'react';
 
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
-import 'swiper/css/bundle';
-import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
 
 
 function WareCard(props) {
+    console.log("rerender");
+
     const [state, setState] = useState({
-        cardMode: "btn-description"
+        cardMode: "btn-description",
+        longText: false
     });
+    const longLength = 230;
+    const longText = props.text.length > longLength;
+    const learnMoreBtn = <div className="card-text__info-intro-more"
+    onClick={(evt) => {
+        console.log("&& !state.longText clicked");
 
-    const swiperRef = useRef(null);
+        const cardText = evt.target.closest(".card-text");
+        cardText.style.height = 'auto';
 
-    const swiper1 = <Swiper
-        modules={[Navigation, Pagination]}
-        slidesPerView={1}
-        ref={swiperRef}
-    >
-        <SwiperSlide>
-            <div className="ware-cards--description">
-                <div className="card-text ">
-                    <p>
-                        {props.text}
-                    </p>
-                </div>
-                <span className="price-background-blue">400 руб. / 700 гр.</span>
-            </div>
-
-        </SwiperSlide>
-        <SwiperSlide>
-            <div className="ware-cards--params">
-                <p>
-                    <b>Масса:</b> 0,7 кг. (595-805 г.).
-                </p>
-                <p>
-                    <b>Срок годности:</b> 6 суток
-                </p>
-                <p>
-                    <b>Порода:</b> КОББ 500.
-                </p>
-                <p>
-                    <b>Срок годности:</b> 6 суток.
-                </p>
-                <p>
-                    <b>Место происхождения:</b> Тверская область
-                </p>
-            </div>
-        </SwiperSlide>
-        <SwiperSlide>
-            <div className="ware-cards--properties">
-                <p>
-                    <b>Энергетическая ценность:</b> 135 ккал./565 кДж.
-                </p>
-                <p>
-                    <b>Пищевая ценность:</b> белки - 13,8 г., жиры - 8,7 г., углеводы - 0 г.; на 100 г.
-                </p>
-            </div>
-        </SwiperSlide>
-    </Swiper>;
+        setState(Object.assign({}, state, {
+            longText: true
+        }));
+    }}
+    >Подробнее</div>;
 
     return (
         <div className="ware-cards--wrap">
-            <img src={props.imgpath} alt={props.imgAlt}/>
+            <div>
+                <img src={props.imgpath} alt={props.imgAlt}/>
+            </div>
             <div className="ware-cards--innerwrap">
                 <h4 >{props.title}</h4>
                 <div>
-                    <div className="swiper-pagination" onClick={function (evt) {
+                    <div onClick={function (evt) {
                         if (evt.target.classList.contains("btn-description")) {
-                            swiperRef.current.swiper.slideTo(0);
-                            setState({
+                            setState(Object.assign({}, state, {
                                 cardMode: "btn-description"
-                            });
-
+                            }));
                         }
 
                         if (evt.target.classList.contains("btn-params")) {
-                            swiperRef.current.swiper.slideTo(1);
-
-                            setState({
+                            setState(Object.assign({}, state, {
                                 cardMode: "btn-params"
-                            });
-
+                            }));
                         }
 
                         if (evt.target.classList.contains("btn-properties")) {
-                            swiperRef.current.swiper.slideTo(2);
-                            setState({
+                            setState(Object.assign({}, state, {
                                 cardMode: "btn-properties"
-                            });
+                            }));
                         }
                     }} >
                         <button className={state.cardMode === "btn-description" ?
@@ -97,15 +58,33 @@ function WareCard(props) {
                         <button className={state.cardMode === "btn-properties" ?
                             "btn btn-default btn-properties btn-active" : "btn btn-default btn-properties"}>Свойства</button>
                     </div>
-                    <div className="swiper-pagination1">
-                        <button className={state.cardMode === "btn-description" ?
-                            "btn btn-default btn-description btn-active" : "btn btn-default btn-description"}>Описание</button>
-                        <button className={state.cardMode === "btn-params" ?
-                            "btn btn-default btn-params btn-active" : "btn btn-default btn-params"}>Характеристики</button>
-                        <button className={state.cardMode === "btn-properties" ?
-                            "btn btn-default btn-properties btn-active" : "btn btn-default btn-properties"}>Свойства</button>
+                    <div className={state.cardMode === "btn-description" ?
+                        "ware-cards--description" : "hidden"}>
+                        <div className="card-text ">
+                            <p>
+                                {(longText && !state.longText) ? props.text.substring(0, longLength) + "..." : props.text}
+                            </p>
+                            {longText && !state.longText ? learnMoreBtn: ""}
+                        </div>
+                        <span className="price-background-blue">{`${props.absPrice} руб. / ${props.absWeight} гр.`}</span>
                     </div>
-                    {swiper1}
+                    <div className={state.cardMode === "btn-params" ?
+                        "ware-cards--params" : "hidden"}>
+                        {props.params.map(function (param) {
+                            return <p>
+                                <b>{param.name}:</b> {param.value}
+                            </p>
+                        })}
+                    </div>
+                    <div className={state.cardMode === "btn-properties" ?
+                        "ware-cards--properties" : "hidden"}>
+                        {props.properties.map(function (param) {
+                            return <p>
+                                <b>{param.name}:</b> {param.value}
+                            </p>
+                        })}
+
+                    </div>
                 </div>
             </div>
         </div>

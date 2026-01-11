@@ -118,6 +118,9 @@ const StyledShopPage = styled(ShopPage) `
     background-color: #fff;
     margin-bottom: 12px;
 }
+.ware-cards--wrap img {
+    width: 248px;
+}
 .ware-cards--innerwrap {
     display: flex;
     flex-direction: column;
@@ -132,6 +135,41 @@ const StyledShopPage = styled(ShopPage) `
     margin-right: 20px;
 
 }
+.card-text__info-intro-more {
+    position: relative;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+.card-text__info-intro-more::after {    
+    content: "";
+    width: 1px;
+    height: 1px;
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    
+    margin-left: 5px;
+    position: absolute;
+    top: 1px;
+    margin-left: 6px;
+}
+.card-text__info-intro-more:hover {
+    // color: #4cc3e5;
+    opacity: 0.6;
+}
+/*.card-text__info-intro-more:hover .card-text__info-intro-more::after {
+    // border-color: #4cc3e5;
+    border: solid #4cc3e5;
+}
+.card-text__info-intro-more::after:hover {
+    border: solid #4cc3e5;
+}*/
+
+    
 
 .ware-cards h4 {
     margin: 0;
