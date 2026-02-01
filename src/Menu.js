@@ -1,10 +1,16 @@
 import WareCard from "./utils/WareCard";
 import mainStorage from "./utils/Storage"
 import {UlStyled} from "./styled/tags";
+import React, {useRef, useState} from 'react';
 
 function Menu () {
 
 
+    const [state, setState] = useState({
+        cart: 0,
+        cartList: {},
+        delivery: ""
+    });
 
     return (
         <div className="menu-column-flex frame">
@@ -18,7 +24,38 @@ function Menu () {
                                 <input className="visually-hidden filter-input-checkbox filter-input" type="checkbox"
                                        name="hang" id={ware.checkboxId}
                                        onClick = {function (evt) {
+                                               const inputIdCheckbox = evt.target.id;
+                                               let currentWare = null;
 
+                                               for (let i = 0; i < mainStorage.wares.length; i++) {
+                                                   if (inputIdCheckbox === mainStorage.wares[i].checkboxId) {
+                                                       currentWare = mainStorage.wares[i];
+                                                       break;
+                                                   }
+                                               }
+
+                                               if (!currentWare) {
+                                                   return;
+                                               }
+
+                                           const list = state.cartList;
+                                           let summ = 0;
+
+                                               if (evt.target.checked) {
+                                                   list[currentWare.checkboxId] = currentWare;
+                                                   summ = state.cart + currentWare.absPrice;
+                                               } else {
+                                                   list[currentWare.checkboxId] = null;
+                                                   summ = state.cart - currentWare.absPrice;
+                                               }
+
+                                               setState({
+                                                   cart: summ,
+                                                   cartList: list,
+                                                   delivery: state.delivery
+                                               });
+
+                                               // alert("the Message");
                                            }}
                                 />
 
@@ -30,10 +67,38 @@ function Menu () {
                 <fieldset className="filters filters-order">
                     <legend className="hidden">Сделать заказ</legend>
                     <div className="fieldset-title"><b>Сделать заказ</b></div>
-                    <input className="order-input" name="input-adress" id="input-adress" placeholder="Введите адрес доставки"/>
+                    <input className="order-input" name="input-adress" id="input-adress"
+                           value = {state.delivery}
+                           placeholder="Введите адрес доставки"
+                           onChange={function (evt) {
+                               console.log(evt.target.value);
+
+                               setState(Object.assign({}, state, {
+                                   delivery: evt.target.value
+                               }))
+                           }}
+                    />
                     <span className="span-price">Цена</span>
-                    <span className="span-value">1200 руб.</span>
-                    <button className="btn-header btn-second-page"> Купить </button>
+                    <span className="span-value">{state.cart} руб.</span>
+                    <button className="btn-header btn-second-page"
+                            disabled={(state.delivery.length == 0) ? true : false }
+                            onClick = {function (evt) {
+                                let finalList = "Товары в корзине: \n";
+
+                                for (let i in state.cartList) {
+                                    if (!state.cartList[i]) {
+                                        continue;
+                                    }
+
+                                    finalList = finalList + " " + state.cartList[i].title + ":  " + state.cartList[i].absPrice +  " руб." + "\n";
+                                }
+
+                                alert(finalList + "всего продуктов:  " + state.cart + " руб." + "\n"
+                                      + "адрес доставки:  " + state.delivery);
+                            }}
+
+
+                            > Купить </button>
                 </fieldset>
             </section>
 
@@ -54,87 +119,6 @@ function Menu () {
                                     />
                                  </li>
                     })}
-
-                    {/*<li className="ware-cards">
-                        <WareCard imgpath="/images/Rectangle 2 .png"
-                                  imgAlt="Филе бедра цыпленка"
-                                  title="Филе бедра цыпленка" text="Филе бедра без кожи и кости. Птица содержится
-                        в свободных птичниках, выращивается на натуральных
-                        зерновых кормах, что влияет положительно на вкус мяса.
-                        Филейная часть бедра обладает насыщенным вкусом
-                        и мясным ароматом."
-                        />
-                    </li>
-                    <li className="ware-cards">
-                        <WareCard
-                            imgpath="/images/Rectangle 1.png"
-                            imgAlt="Филе бедра гуся" title="Филе бедра гуся"
-                            text="Филе бедра гуся - это тонко нарезанный продукт, который
-                         понравится всем любителям сырокопченых продуктов.
-                         Необычный вкус, аппетитный аромат и тонкое послевкусия
-                         отличает сырокопченого гуся от других подобных продуктов."
-                            priceProduct="400 руб. / 700 гр."
-                            params="<p>
-                            <b></b>
-                        </p>
-                        <p>
-                            <b></b>
-                        </p>
-                        <p>
-                            <b>:</b> .
-                        </p>
-                        <p>
-                            <b>:</b> 6 суток.
-                        </p>
-                        <p>
-                            <b>:</b>
-                        </p>"
-
-                            properties="<p>
-                            <b>:</b>
-                        </p>
-                        <p>
-                            <b>:</b>
-                        </p>"
-                        />
-                        <div className="ware-cards--wrap">
-                            <img src="images/Rectangle 1.png" alt="Филе бедра гуся"/>
-                        </div>
-
-                    </li>
-                    <li className="ware-cards">
-                        <WareCard imgpath="/images/potato.webp"
-                                  imgAlt="Филе бедра цыпленка"  title="Картофель"
-                                  text="Картофель отличается нежной, рассыпчатой текстурой
-                         и приятным сладковатым вкусом. Такой картофель
-                          можно запекать или отваривать, не очищая тонкую кожицу."/>
-                        <div className="ware-cards--wrap">
-                            <img src="images/Rectangle 1.png" alt="Мякоть бедра говяжья"/>
-                        </div>
-
-                    </li>
-                    <li className="ware-cards">
-                        <WareCard imgpath="/images/mashroom.webp"
-                                  imgAlt="Шампиньоны мини"
-                                  title="Шампиньоны мини" text="Эти шампиньоны – миниатюрные и очень питательные грибы,
-                         которые не только обладают неповторимым вкусом,
-                          но и способствуют укреплению здоровья. Они богаты витаминами группы B,
-                           калием, фосфором, железом и медью, а также антиоксидантами.
-                           Мелкие шампиньоны идеально подходят для приготовления соусов,
-                           супов, гарниров и различных мясных блюд.
-                           Их нежный аромат и приятная текстура добавят утонченности каждому блюду,
-                           придадут особый вкус и аппетитный вид."/>
-
-
-                    </li>
-                    <li className="ware-cards">
-                        <WareCard imgpath="/images/berry.webp"
-                                  imgAlt="Голубика"
-                                  title="Голубика" text="Голубика – синяя ягода с белесым налетом, вкусная, ароматная,
-                         обладающая массой полезных свойств. Голубика используется как в свежем,
-                          так и в переработанном виде. Из нее готовят варенье, пастилу, компот, желе,
-                           кисель, мусс, вино, квас, сырое варенье (протертая с сахаром ягода)."/>
-                    </li>*/}
                 </UlStyled>
 
             </section>

@@ -3,8 +3,6 @@ import React, {useRef, useState} from 'react';
 
 
 function WareCard(props) {
-    console.log("rerender");
-
     const [state, setState] = useState({
         cardMode: "btn-description",
         longText: false

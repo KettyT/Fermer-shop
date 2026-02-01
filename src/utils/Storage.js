@@ -229,6 +229,9 @@ class Storage {
 
 
         ];
+
+        /*this.cartSum = 0;
+        this.cartList = {};*/
     }
 
 }
