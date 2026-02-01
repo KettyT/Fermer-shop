@@ -534,6 +534,11 @@ fieldset {
     box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.04);
 }
 
+.swiper.swiper-initialized.swiper-vertical {
+    width: 100%;
+    height: 100%;
+}
+
 `;
 
 export default GlobalStyles;

@@ -3,8 +3,14 @@ import mainStorage from "./utils/Storage"
 import {UlStyled} from "./styled/tags";
 import React, {useRef, useState} from 'react';
 
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import 'swiper/css/bundle';
+import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
+import ProductSwiper from "./styled/ProductSwiper";
+
 function Menu () {
 
+    const [swiperRef, setSwiperRef] = useState(null);
 
     const [state, setState] = useState({
         cart: 0,
@@ -71,7 +77,6 @@ function Menu () {
                            value = {state.delivery}
                            placeholder="Введите адрес доставки"
                            onChange={function (evt) {
-                               console.log(evt.target.value);
 
                                setState(Object.assign({}, state, {
                                    delivery: evt.target.value
@@ -104,7 +109,36 @@ function Menu () {
 
             <section className="products">
                 <legend></legend>
-                <UlStyled>
+                <Swiper
+                    onSwiper={setSwiperRef}
+                    spaceBetween={12}
+                    direction="vertical"
+                    slidesPerView="auto"
+                    scrollbar={{ draggable: true }}
+                    mousewheel="true"
+                    pagination={{
+                        type: "function"
+                    }}
+                    // width="100%"
+
+                    autoHeight="true"
+                >
+                    {mainStorage.wares.map(function (ware) {
+                        return <SwiperSlide className="ware-cards" height="292">
+                            <WareCard imgpath={ware.imgpath}
+                                      imgAlt={ware.imgAlt}
+                                      title={ware.title}
+                                      text={ware.text}
+                                // priceProduct={ware.priceProduct}
+                                      params={ware.params}
+                                      properties={ware.properties}
+                                      absPrice={ware.absPrice}
+                                      absWeight={ware.absWeight}
+                            />
+                        </SwiperSlide>
+                    })}
+                </Swiper>
+                {/*<UlStyled>
                     {mainStorage.wares.map(function (ware) {
                         return <li className="ware-cards">
                                     <WareCard imgpath={ware.imgpath}
@@ -119,7 +153,7 @@ function Menu () {
                                     />
                                  </li>
                     })}
-                </UlStyled>
+                </UlStyled>*/}
 
             </section>
 
